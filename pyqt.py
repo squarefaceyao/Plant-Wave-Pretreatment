@@ -22,20 +22,34 @@ class PlotlyQtDemo(QWidget):
         self.initUi()
 
     def initUi(self):
+        #界面最大化
         self.showMaximized()
         # self.resize(1200, 800)
+        # 设置界面标题
         self.setWindowTitle('Plotly_Qt_Demo')
+        # 界面主布局为水平布局
         self.mainLayout = QHBoxLayout(self)
         # self.mainLayout.setContentsMargins(0, 0, 0, 0)
+        # 添加分离部件，分割窗口
         self.splitter = QSplitter(Qt.Horizontal)
 
         self.lefWidget = QWidget()
         self.leftLayout = QFormLayout(self.lefWidget)
         self.leftLayout.setVerticalSpacing(50)
+
+        self.titleBox = QHBoxLayout()
+        self.titleLabel = QLabel('植物电信号数据处理软件')
+        self.titleLabel.setStyleSheet("QLabel{font-size:25px;font-weight:bold;}")
+        self.titleBox.addWidget(self.titleLabel, alignment=Qt.AlignCenter)
+        self.leftLayout.addRow(self.titleBox)
+
         self.hbox = QHBoxLayout()
+        # 添加选择文件按钮
         self.choose_file_btn = QPushButton('选择文件')
+        # 点击选择文件按钮之后 触发choose_file_btn_func方法，连接起来
         self.choose_file_btn.clicked.connect(self.choose_file_btn_func)
         self.choose_file_edit = QLineEdit()
+        # 设置 文件路径的文本框只能读不能写
         self.choose_file_edit.setReadOnly(True)
         self.leftLayout.addRow(self.choose_file_btn, self.choose_file_edit)
         self.new_file_name_edit = QLineEdit()
@@ -43,41 +57,50 @@ class PlotlyQtDemo(QWidget):
         self.hbox1 = QHBoxLayout()
         self.hbox1.setSpacing(10)
         int_validato = QIntValidator(self)
+        # 4个单行文本编辑控件
         self.sequence_edit_1 = QLineEdit()
         self.sequence_edit_2 = QLineEdit()
         self.sequence_edit_3 = QLineEdit()
         self.sequence_edit_4 = QLineEdit()
+        # 设置只能输入数字
         self.sequence_edit_1.setValidator(int_validato)
         self.sequence_edit_2.setValidator(int_validato)
         self.sequence_edit_3.setValidator(int_validato)
         self.sequence_edit_4.setValidator(int_validato)
+        # 在布局中添加 这4个控件
         self.hbox1.addWidget(self.sequence_edit_1)
         self.hbox1.addWidget(self.sequence_edit_2)
         self.hbox1.addWidget(self.sequence_edit_3)
         self.hbox1.addWidget(self.sequence_edit_4)
-        self.leftLayout.addRow('请输入读取数据的序号(4个):', self.hbox1)
+        self.leftLayout.addRow('请输入读取序列的标号(4个):', self.hbox1)
 
+        self.readDataBox = QHBoxLayout()
+        # 添加读取数据的按钮
+        self.readDataBtn = QPushButton('读取数据')
+        # 将读取数据按钮 点击之后运行绑定的函数，绑定到 readDataBtn_func
+        self.readDataBtn.clicked.connect(self.readDataBtn_func)
+        self.readDataBtn.setMinimumSize(120, 30)
+        # 将读取数据按钮添加到布局中
+        self.readDataBox.addWidget(self.readDataBtn, alignment=Qt.AlignCenter)
 
-
+        self.leftLayout.addRow(self.readDataBox)
+        # 2个单行文本编辑控件a波起始点，b波起始点
         self.a_wave_starting_point = QLineEdit()
         self.b_wave_starting_point = QLineEdit()
         self.leftLayout.addRow('请输入a波起始点:', self.a_wave_starting_point)
         self.leftLayout.addRow('请输入b波起始点:', self.b_wave_starting_point)
 
         self.hbox2 = QHBoxLayout()
-
-        self.confirm_btn = QPushButton('读取数据')
-        self.confirm_btn.clicked.connect(self.confirm_btn_func)
-        self.confirm_btn.setMinimumSize(120, 30)
-
+        # 添加波形拼接并去除基线的按钮
         self.waveform_splicing_btn = QPushButton('波形拼接并去除基线')
+        # 将波形拼接并去除基线的按钮 点击之后运行绑定的函数，绑定到 waveform_splicing_btn_func
         self.waveform_splicing_btn.clicked.connect(self.waveform_splicing_btn_func)
         self.waveform_splicing_btn.setMinimumSize(120, 30)
 
-        self.hbox2.addWidget(self.confirm_btn, alignment=Qt.AlignCenter)
         self.hbox2.addWidget(self.waveform_splicing_btn, alignment=Qt.AlignCenter)
         self.leftLayout.addRow(self.hbox2)
 
+        # 添加QWebEngineView浏览器模块窗口
         self.browser = QWebEngineView()
         self.splitter.addWidget(self.lefWidget)
         self.splitter.addWidget(self.browser)
@@ -86,6 +109,7 @@ class PlotlyQtDemo(QWidget):
         self.mainLayout.addWidget(self.splitter)
 
     def choose_file_btn_func(self):
+        # QFileDialog.getOpenFileName选择 文件对话框
         fileName, filetype = QFileDialog.getOpenFileName(self,
                                                                 "选取文件",
                                                                 os.getcwd(),  # 起始路径
@@ -121,7 +145,7 @@ class PlotlyQtDemo(QWidget):
 
 
 
-    def confirm_btn_func(self):
+    def readDataBtn_func(self):
         print(self.choose_file_edit.text())
         print(self.new_file_name_edit.text())
         print(self.sequence_edit_1.text())
