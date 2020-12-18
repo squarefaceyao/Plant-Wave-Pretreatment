@@ -26,7 +26,7 @@ class PlotlyQtDemo(QWidget):
         self.showMaximized()
         # self.resize(1200, 800)
         # 设置界面标题
-        self.setWindowTitle('Plotly_Qt_Demo')
+        self.setWindowTitle('PlantES waveform extraction')
         # 界面主布局为水平布局
         self.mainLayout = QHBoxLayout(self)
         # self.mainLayout.setContentsMargins(0, 0, 0, 0)
@@ -38,14 +38,14 @@ class PlotlyQtDemo(QWidget):
         self.leftLayout.setVerticalSpacing(50)
 
         self.titleBox = QHBoxLayout()
-        self.titleLabel = QLabel('植物电信号数据处理软件')
+        self.titleLabel = QLabel('Plant electric signal waveform extraction software')
         self.titleLabel.setStyleSheet("QLabel{font-size:25px;font-weight:bold;}")
         self.titleBox.addWidget(self.titleLabel, alignment=Qt.AlignCenter)
         self.leftLayout.addRow(self.titleBox)
 
         self.hbox = QHBoxLayout()
         # 添加选择文件按钮
-        self.choose_file_btn = QPushButton('选择文件')
+        self.choose_file_btn = QPushButton('Select CSV file')
         # 点击选择文件按钮之后 触发choose_file_btn_func方法，连接起来
         self.choose_file_btn.clicked.connect(self.choose_file_btn_func)
         self.choose_file_edit = QLineEdit()
@@ -53,7 +53,7 @@ class PlotlyQtDemo(QWidget):
         self.choose_file_edit.setReadOnly(True)
         self.leftLayout.addRow(self.choose_file_btn, self.choose_file_edit)
         self.new_file_name_edit = QLineEdit()
-        self.leftLayout.addRow('保存新文件的名字:', self.new_file_name_edit)
+        self.leftLayout.addRow('Save as file name (test.csv): ', self.new_file_name_edit)
         self.hbox1 = QHBoxLayout()
         self.hbox1.setSpacing(10)
         int_validato = QIntValidator(self)
@@ -72,11 +72,11 @@ class PlotlyQtDemo(QWidget):
         self.hbox1.addWidget(self.sequence_edit_2)
         self.hbox1.addWidget(self.sequence_edit_3)
         self.hbox1.addWidget(self.sequence_edit_4)
-        self.leftLayout.addRow('请输入读取序列的标号(4个):', self.hbox1)
+        self.leftLayout.addRow('Enter column name(only numbers):', self.hbox1)
 
         self.readDataBox = QHBoxLayout()
         # 添加读取数据的按钮
-        self.readDataBtn = QPushButton('读取数据')
+        self.readDataBtn = QPushButton('Read data')
         # 将读取数据按钮 点击之后运行绑定的函数，绑定到 readDataBtn_func
         self.readDataBtn.clicked.connect(self.readDataBtn_func)
         self.readDataBtn.setMinimumSize(120, 30)
@@ -87,12 +87,12 @@ class PlotlyQtDemo(QWidget):
         # 2个单行文本编辑控件a波起始点，b波起始点
         self.a_wave_starting_point = QLineEdit()
         self.b_wave_starting_point = QLineEdit()
-        self.leftLayout.addRow('请输入a波起始点:', self.a_wave_starting_point)
-        self.leftLayout.addRow('请输入b波起始点:', self.b_wave_starting_point)
+        self.leftLayout.addRow('Please enter a wave starting point:', self.a_wave_starting_point)
+        self.leftLayout.addRow('Please enter b wave starting point:', self.b_wave_starting_point)
 
         self.hbox2 = QHBoxLayout()
         # 添加波形拼接并去除基线的按钮
-        self.waveform_splicing_btn = QPushButton('波形拼接并去除基线')
+        self.waveform_splicing_btn = QPushButton('Waveform stitching and removing baseline')
         # 将波形拼接并去除基线的按钮 点击之后运行绑定的函数，绑定到 waveform_splicing_btn_func
         self.waveform_splicing_btn.clicked.connect(self.waveform_splicing_btn_func)
         self.waveform_splicing_btn.setMinimumSize(120, 30)
@@ -111,7 +111,7 @@ class PlotlyQtDemo(QWidget):
     def choose_file_btn_func(self):
         # QFileDialog.getOpenFileName选择 文件对话框
         fileName, filetype = QFileDialog.getOpenFileName(self,
-                                                                "选取文件",
+                                                                "Select CSV file",
                                                                 os.getcwd(),  # 起始路径
                                                                 "All Files (*);;CSV Files (*.csv)")  # 设置文件扩展名过滤,用双分号间隔
 
@@ -161,11 +161,6 @@ class PlotlyQtDemo(QWidget):
         print(sys.path[0] + '/demo.html')
         # self.browser.setUrl(QUrl(sys.path[0] + '/demo.html'))
         self.browser.setUrl(QUrl('file:///'+sys.path[0] + '/demo.html'))
-
-
-
-
-
 
 class Plant(object):
     def __init__(self, filename, q, w, e, r):
@@ -229,7 +224,7 @@ class Plant(object):
         df = df.T
         df1 = pd.DataFrame()
         col = list(df.columns)
-        print("正在去除基线，请稍等。。。")
+        print("The baseline is being removed, please wait. . .")
         for i in range(len(df.columns)):
             df1[col[i]] = df.apply(lambda a: a[i] - a[0], axis=1)
         return df1.T
